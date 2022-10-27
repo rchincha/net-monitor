@@ -1,6 +1,9 @@
 name: Main
 
 on:
+  push:
+    branches:
+      - kubecon
   pull_request:
     branches:
       - main
