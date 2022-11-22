@@ -72,7 +72,7 @@ jobs:
         uses: Duffney/setup-notation@v0.1.1
         if: github.event_name != 'pull_request'
         with:
-          version: '0.11.0-alpha.4'
+          version: '0.12.0-beta.1'
           key_name: 'wabbit-networks-io'
           certificate_key_id: ${{ secrets.NOTATION_KEY_ID }}
           plugin_name: 'notation-azure-kv'
