@@ -59,6 +59,7 @@ jobs:
             APP_NAME=${{ env.APP_NAME }}
           url: docker://${{ env.LOCAL_REGISTRY }}
           tags: ${{ env.TAG }}
+          skip-tls: true
 
       - name: Azure Login
         uses: azure/login@v1
