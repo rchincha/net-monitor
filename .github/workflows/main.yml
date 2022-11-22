@@ -28,7 +28,7 @@ jobs:
       contents: write
     services:
       oci-registry:
-        image: ghcr.io/oras-project/registry:v1.0.0-rc.2
+        image: ghcr.io/project-zot/zot-minimal-linux-amd64:v1.4.3-rc7
         ports:
           - 5000:5000
     steps:
@@ -43,9 +43,6 @@ jobs:
             echo TAG=$GITHUB_REF_NAME >> $GITHUB_ENV
           fi
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       - name: Install oras
         run: |
           ORAS_VERSION=0.15.1
@@ -53,11 +50,15 @@ jobs:
           tar -zxf oras.tar.gz oras
           mv oras /usr/local/bin/oras
 
-      - name: Docker build and push net-monitor image
-        shell: bash
-        run: |
-          docker build --build-arg TEXT="Hello again. This image from has an attached SBOM and vuln scan. Image and all artifacts are signed with notation" -t ${{ env.LOCAL_REGISTRY }}/${{ env.APP_NAME }}:${{ env.TAG }} .
-          docker push ${{ env.LOCAL_REGISTRY }}/${{ env.APP_NAME }}:${{ env.TAG }}
+      - name: Stacker build and push net-monitor image
+        uses: project-stacker/stacker-build-push-action@main
+        with:
+          build-args: |
+            TEXT="This image has an attached SBOM and vuln scan. Image and all artifacts are signed with notation."
+            SLEEP="30m"
+            APP_NAME=${{ env.APP_NAME }}
+          url: docker://${{ env.LOCAL_REGISTRY }}
+          tags: ${{ env.TAG }}
 
       - name: Azure Login
         uses: azure/login@v1
